@@ -11,7 +11,7 @@ class wordsSpider(scrapy.Spider):
 
     def _init_(self, **kwargs):
         super()._init_(**kwargs)
-        self.star_urls = [f'https://relatedwords.io/search.pnp?search={self.text}']
+        self.start_urls = [f'https://relatedwords.io/search.pnp?search={self.text}']
   
     def parse(self, response):
         """
