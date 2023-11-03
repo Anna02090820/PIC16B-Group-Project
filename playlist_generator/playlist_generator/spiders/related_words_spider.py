@@ -18,9 +18,11 @@ def parse(self, response):
         #acesses the cast and crew page
 
 def parse_related_words(self,response):
-        
-        words=response.css('span.term a::text').get()) #gets number of cast
-        
-        for link in links[:total_actors]:
-            yield scrapy.Request(link.url,callback=self.parse_actor_page) 
-            #accesses each actor profile page
+    
+        words=response.css('span.term a::text')[0:10].getall()
+    
+        for word in words:
+            yield{
+                "topic":ui,
+                "related_word": word
+            }
