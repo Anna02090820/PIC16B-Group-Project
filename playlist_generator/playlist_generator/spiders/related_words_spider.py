@@ -6,12 +6,11 @@ from scrapy.linkextractors import LinkExtractor
 
 class wordsSpider(scrapy.Spider):
     name = 'related_words_spider'
-    ui="bakery"
     start_urls = ["https://relatedwords.io/"] 
 
     def _init_(self, **kwargs):
         super()._init_(**kwargs)
-        self.start_urls = [f'https://relatedwords.io/search.pnp?search={self.text}']
+        #self.start_urls = [f'https://relatedwords.io/search.pnp?search={self.text}']
   
     def parse(self, response):
         """
@@ -23,10 +22,6 @@ class wordsSpider(scrapy.Spider):
         """
         get the links of first 10 keywords of user input's word
         """
-        
-        # get first 10 words
-        words=response.css('span.term a::text')[0:10].getall()
-        
         #gets links from page
         links=self.link_extractor.extract_links(response) 
         
