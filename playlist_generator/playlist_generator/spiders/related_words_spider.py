@@ -4,8 +4,8 @@
 import scrapy
 from scrapy.linkextractors import LinkExtractor
 
-class playlistSpider(scrapy.Spider):
-    name = 'playlist_spider'
+class wordsSpider(scrapy.Spider):
+    name = 'related_words_spider'
     ui="bakery"
     start_urls = ["https://relatedwords.io/"] 
   
