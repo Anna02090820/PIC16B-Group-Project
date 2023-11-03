@@ -6,14 +6,13 @@ from scrapy.linkextractors import LinkExtractor
 
 class playlistSpider(scrapy.Spider):
     name = 'playlist_spider'
-    
+    ui="bakery"
     start_urls = ["https://relatedwords.io/"] 
   
 def parse(self, response):
         """
         """
-        ui="bakery"
-        cast_url=response.url +ui 
+        cast_url=response.url + ui 
         yield scrapy.Request(cast_url,callback=self.parse_related_words)
         #acesses the cast and crew page
 
