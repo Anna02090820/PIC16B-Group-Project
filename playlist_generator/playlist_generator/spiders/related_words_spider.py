@@ -9,19 +9,20 @@ class wordsSpider(scrapy.Spider):
     ui="bakery"
     start_urls = ["https://relatedwords.io/"] 
   
-def parse(self, response):
+    def parse(self, response):
         """
         """
-        cast_url=response.url + ui 
+        cast_url=response.url + self.ui 
         yield scrapy.Request(cast_url,callback=self.parse_related_words)
         #acesses the cast and crew page
 
-def parse_related_words(self,response):
+    def parse_related_words(self,response):
     
+        
         words=response.css('span.term a::text')[0:10].getall()
     
         for word in words:
             yield{
-                "topic":ui,
+                "topic":self.ui,
                 "related_word": word
             }
