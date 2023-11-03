@@ -8,6 +8,10 @@ class wordsSpider(scrapy.Spider):
     name = 'related_words_spider'
     ui="bakery"
     start_urls = ["https://relatedwords.io/"] 
+
+    def _init_(self, **kwargs):
+        super()._init_(**kwargs)
+        self.star_urls = [f'https://relatedwords.io/search.pnp?search={self.text}']
   
     def parse(self, response):
         """
