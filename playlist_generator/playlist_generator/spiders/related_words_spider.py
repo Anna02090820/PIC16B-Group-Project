@@ -7,6 +7,7 @@ from scrapy.linkextractors import LinkExtractor
 class wordsSpider(scrapy.Spider):
     name = 'related_words_spider'
     start_urls = ["https://relatedwords.io/"] 
+    link_extractor = LinkExtractor(allow="https://relatedwords.io/")
 
     def _init_(self, **kwargs):
         super()._init_(**kwargs)
