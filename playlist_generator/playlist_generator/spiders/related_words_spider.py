@@ -3,6 +3,7 @@
 
 import scrapy
 from scrapy.linkextractors import LinkExtractor
+import numpy as np
 
 class wordsSpider(scrapy.Spider):
     name = 'related_words_spider'
@@ -21,16 +22,17 @@ class wordsSpider(scrapy.Spider):
     def parse_word_links(self, response):
         """
         """
+        # create range to iterate through
+        num_words= np.zeros(10)
         
-        # get first 10 words
-        words=response.css('span.term a::text')[0:10].getall()
-        
-        #gets links from page
-        links=self.link_extractor.extract_links(response) 
-        
-        # get the link for the first 10 related words 
-        for link in links[26:35]:
-            yield scrapy.Request(link.url, callback = self.parse_related_words)
+        for i in range(num_words):
+            # find link to the related word (i + 1) because python is 0-index
+            word_link = response.xpath(f"//*[@id=\"terms-list\"]/li[{str(i+1)}]/div[1]/span[1]/a/@href").get()
+            
+            # create the link for the related words
+            next_link = urljoin(response.url, word_link)
+            
+            yield scrapy.Request(next_link, callback = self.parse_related_words)
     
     def parse_related_words(self, response):
         
