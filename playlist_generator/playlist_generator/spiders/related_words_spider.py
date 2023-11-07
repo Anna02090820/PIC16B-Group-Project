@@ -33,10 +33,10 @@ class wordsSpider(scrapy.Spider):
     def parse_related_words(self,response):
         
         words=response.css('span.term a::text')[0:10].getall()
-        words.append(response.css('title::text').get().split(" Words")[0].lower())
+        #words.append(response.css('title::text').get().split(" Words")[0].lower())
     
         for word in words:
             yield{
-                "topic": self.ui,
+                "topic": response.css('title::text').get().split(" Words")[0].lower(),
                 "related_word": word
             }
