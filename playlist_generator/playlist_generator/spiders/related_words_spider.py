@@ -14,19 +14,10 @@ class wordsSpider(scrapy.Spider):
         #self.start_urls = [f'https://relatedwords.io/search.pnp?search={self.text}']
   
     def parse(self, response):
-            """
-            """
-            cast_url=response.url + self.ui 
-            yield scrapy.Request(cast_url,callback=self.parse_word_links)
-            #acesses the cast and crew page
-     
-    def parse_word_links(self,response):
-        #get the links and yield a request to parse_related_words in each link page
         """
         """
-        cast_url=response.url + ui 
-        yield scrapy.Request(cast_url,callback=self.parse_related_words)
-        #acesses the cast and crew page
+        topic_url=response.url + "-".join((self.ui).lower().split())
+        yield scrapy.Request(topic_url,callback=self.parse_word_links)
      
     def parse_word_links(self, response):
         """
