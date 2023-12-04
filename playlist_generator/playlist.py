@@ -27,9 +27,9 @@ def get_related_words(keyword,topic):
     related_words=list(set(related_words)) #makes sure there no overlap
     return related_words
 
-def spotify_authentication(cid,cs):
-    # cid="45d772a85b0a4c2681a42696ad3b5ef3"
-    # cs="9e9848f1081e459ebc686f6f62b5902d"
+def spotify_authentication():
+    cid="45d772a85b0a4c2681a42696ad3b5ef3"
+    cs="9e9848f1081e459ebc686f6f62b5902d"
     sp_oauth=SpotifyOAuth(client_id=cid,
                           client_secret=cs,
                           redirect_uri="http://localhost:2023/callback",
@@ -69,9 +69,9 @@ def get_playlist_songs(sp,related_words):
                 df.loc[len(df)]=row
     return df
 
-def generate_playlist(cid,cs,keyword,topic):
+def generate_playlist(keyword,topic):
     related_words=get_related_words(keyword,topic)
-    sp=spotify_authentication(cid,cs)
+    sp=spotify_authentication()
     playlist_df=get_playlist_songs(sp,related_words)
     playlist=sp.user_playlist_create(user=sp.me()["id"],
                                      name=f"{keyword.title()} Playlist",
