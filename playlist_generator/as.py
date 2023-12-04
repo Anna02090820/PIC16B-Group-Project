@@ -15,7 +15,7 @@ def index():
             
             if (r.status_code == 200):
                 break
-        url=playlist.generate_playlist(cid,cs,keyword,topic)
+        url=playlist.generate_playlist(keyword,topic)
         return redirect(url) 
     return render_template_string('''
         <html>
