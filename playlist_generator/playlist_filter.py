@@ -14,13 +14,12 @@ def query_find_happy(df, conn):
     """
     SELECT S.title, S.artist, S.release_date, S.uri, S.danceability, S.energy, S.valence
     FROM songs S
-    WHERE energy >= 0.4 AND energy <= 0.6 
-    AND valence >= 0.8
-    AND danceability >= 0.8
+    WHERE energy >= 0.3 AND energy <= 0.7
+    AND valence >= 0.7
+    AND danceability >= 0.7
     """
     # read sql command as pandas
     df = pd.read_sql_query(cmd, conn)
-    
     return df
 
 
@@ -33,13 +32,12 @@ def query_find_hype(df, conn):
     """
     SELECT S.title, S.artist, S.release_date, S.uri, S.danceability, S.energy, S.valence
     FROM songs S
-    WHERE energy >= 0.4 AND energy <= 0.8
-    AND valence >= 0.6 AND valence <= 0.8
-    AND danceability >= 0.6 AND danceability <= 0.8 
+    WHERE energy >= 0.3 AND energy <= 0.9
+    AND valence >= 0.5 AND valence <= 0.9
+    AND danceability = 0.5 AND danceability <= 0.9 
     """
     # read sql command as pandas
     df = pd.read_sql_query(cmd, conn)
-    
     return df
 
 
@@ -52,13 +50,12 @@ def query_find_energetic(df, conn):
     """
     SELECT S.title, S.artist, S.release_date, S.uri, S.danceability, S.energy, S.valence
     FROM songs S
-    WHERE energy >= 0.6 
-    AND valence >= 0.4 AND valence <= 0.6
-    AND danceability >= 0.6 AND danceability <= 0.8
+    WHERE energy >= 0.5 
+    AND valence >= 0.3 AND valence <= 0.7
+    AND danceability >= 0.5 AND danceability <= 0.9
     """
     # read sql command as pandas
     df = pd.read_sql_query(cmd, conn)
-    
     return df
 
 
@@ -71,13 +68,12 @@ def query_find_agitated(df, conn):
     """
     SELECT S.title, S.artist, S.release_date, S.uri, S.danceability, S.energy, S.valence
     FROM songs S
-    WHERE energy >= 0.6 
-    AND valence >= 0.2 AND valence <= 0.4
-    AND danceability >= 0.8
+    WHERE energy >= 0.5 
+    AND valence >= 0.1 AND valence <= 0.5
+    AND danceability >= 0.7
     """
     # read sql command as pandas
     df = pd.read_sql_query(cmd, conn)
-    
     return df
 
 
@@ -90,13 +86,12 @@ def query_find_melancholic(df, conn):
     """
     SELECT S.title, S.artist, S.release_date, S.uri, S.danceability, S.energy, S.valence
     FROM songs S
-    WHERE energy <= 0.6 
-    AND valence >= 0.2
-    AND danceability >= 0.2 AND danceability <= 0.4
+    WHERE energy <= 0.5 
+    AND valence <= 0.3
+    AND danceability >= 0.1 AND danceability <= 0.5
     """
     # read sql command as pandas
     df = pd.read_sql_query(cmd, conn)
-    
     return df
 
 
@@ -109,13 +104,12 @@ def query_find_sorrowful(df, conn):
     """
     SELECT S.title, S.artist, S.release_date, S.uri, S.danceability, S.energy, S.valence
     FROM songs S
-    WHERE energy >= 0.2 AND energy <= 0.4 
-    AND valence >= 0.2 AND valence <= 0.4
-    AND danceability >= 0.2 AND danceability <= 0.4
+    WHERE energy >= 0.1 AND energy <= 0.5 
+    AND valence >= 0.1 AND valence <= 0.5
+    AND danceability >= 0.1 AND danceability <= 0.5
     """
     # read sql command as pandas
     df = pd.read_sql_query(cmd, conn)
-    
     return df
 
 
@@ -128,13 +122,12 @@ def query_find_calm(df, conn):
     """
     SELECT S.title, S.artist, S.release_date, S.uri, S.danceability, S.energy, S.valence
     FROM songs S
-    WHERE energy <= 0.2 
-    AND valence >= 0.4 AND valence <= 0.6
-    AND danceability <0.2
+    WHERE energy <= 0.3 
+    AND valence >= 0.3 AND valence <= 0.7
+    AND danceability <= 0.3
     """
     # read sql command as pandas
     df = pd.read_sql_query(cmd, conn)
-    
     return df
 
 
@@ -147,11 +140,10 @@ def query_find_comfort(df, conn):
     """
     SELECT S.title, S.artist, S.release_date, S.uri, S.danceability, S.energy, S.valence
     FROM songs S
-    WHERE energy >= 0.2 AND energy <= 0.4
-    AND valence >= 0.6 AND valence <= 0.8
-    AND danceability >= 0.2 AND danceability <= 0.4
+    WHERE energy >= 0.1 AND energy <= 0.5
+    AND valence >= 0.5 AND valence <= 0.9
+    AND danceability >= 0.1 AND danceability <= 0.5
     """
     # read sql command as pandas
     df = pd.read_sql_query(cmd, conn)
-    
     return df
