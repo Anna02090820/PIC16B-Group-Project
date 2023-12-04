@@ -1,24 +1,24 @@
-from flask import Flask, request, redirect, render_template_string,flash
+from flask import Flask, request, redirect, render_template_string
 import requests
+import playlist
+
 app = Flask(__name__)
-app.secret_key = 'generator'
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
     if request.method == 'POST':
-        keyword = request.form['keyword']
+        keyword = request.form['keyword'].lower()
         cid = request.form['cid']
         cs = request.form['cs']
         vibe = request.form['vibe']
         while (True):
-            topic="-".join(keyword.lower().split())
+            topic="-".join(keyword.split())
             r = requests.head(f"https://relatedwords.io/{topic}")
             
             if (r.status_code == 200):
                 break
-                
-        return redirect("https://www.youtube.com/results?search_query="+keyword) #just to test for now
-        # playlist_url = user_playlist_create(user=user,name=f"{user_input.title()}  Playlist",public=False,description=f"This is a {user_input.title()} Themed Playlist")
+        url=playlist.generate_playlist(cid,cs,keyword,topic)
+        return redirect(url) 
     return render_template_string('''
         <html>
             <body>
