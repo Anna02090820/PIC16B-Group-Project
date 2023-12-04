@@ -1,278 +1,73 @@
-# items.py
-# Define here the models for your scraped items
-#
-# See documentation in:
-# https://docs.scrapy.org/en/latest/topics/items.html
-
+import pandas as pd
+import spotipy
+import re
+import spotipy.oauth2 as oauth2
+from spotipy.oauth2 import SpotifyOAuth
+from spotipy.oauth2 import SpotifyClientCredentials
+import time
+from scrapy import cmdline
+import pandas as pd
+import spotipy.oauth2 as oauth2
+from spotipy.oauth2 import SpotifyOAuth
+from spotipy.oauth2 import SpotifyClientCredentials
+from playlist_generator.spiders.related_words_spider import wordsSpider
+from twisted.internet import reactor
 import scrapy
+from scrapy.crawler import CrawlerRunner
 
+# Function 1: Scrapy and Get related Words
+runner = CrawlerRunner(settings={"FEEDS": {"results.csv": {"format": "csv",'overwrite': True}}})
+    d = runner.crawl(wordsSpider, ui=topic)
+    d.addBoth(lambda _: reactor.stop())
+    reactor.run()  # the script will block here until the crawling is finished
+results=pd.read_csv("results.csv") #gets results from csv file
+related_words=[f"{keyword}"]+list(results["topic"]) +list(results["related_word"]) #adds all entries to one list
+related_words=list(set(related_words)) #makes sure there no overlap
 
-class PlaylistGeneratorItem(scrapy.Item):
-    # define the fields for your item here like:
-    # name = scrapy.Field()
-    pass
+# Function 2: Spotify authentication 
+cid="45d772a85b0a4c2681a42696ad3b5ef3"
+cis="9e9848f1081e459ebc686f6f62b5902d"
 
+sp_oauth=SpotifyClientCredentials(client_id=cid,client_secret=cis)
+#sp_oauth=SpotifyOAuth(client_id=cid,client_secret=cis,redirect_uri="http://localhost:2023/callback",scope=["playlist-modify-public","playlist-modify-private"])
+#this line doesn't work in deepnote for some reason but it works in jupyter lab
+sp = spotipy.Spotify(auth_manager=sp_oauth)
 
+#add rows of the columns associated with the song features
+df=pd.DataFrame(columns=["title","artist","release_date","uri",'danceability', 'energy', 'valence']) 
+for word in related_words:
+    word_results=sp.search(q=f"track:{word}", limit=5)
 
-# middlewares.py
-# Define here the models for your spider middleware
-#
-# See documentation in:
-# https://docs.scrapy.org/en/latest/topics/spider-middleware.html
+    for song in word_results["tracks"]["items"]:
 
-from scrapy import signals
+        mod_title=" "+re.sub(r'[^\w\s]', '', song["name"].lower())+" "
+        #checks that the actual word is in title, not just the word plus some letters
 
-# useful for handling different item types with a single interface
-from itemadapter import is_item, ItemAdapter
+        if f" {word} " in mod_title:
 
+            track_features = sp.audio_features(song["id"])
+            #track features isn't working on my computer anymore for some reason??
 
-class PlaylistGeneratorSpiderMiddleware:
-    # Not all methods need to be defined. If a method is not defined,
-    # scrapy acts as if the spider middleware does not modify the
-    # passed objects.
+            try:
+                track_features[0]['acousticness'] # check if audio features exist
+            except:
+                continue
 
-    @classmethod
-    def from_crawler(cls, crawler):
-        # This method is used by Scrapy to create your spiders.
-        s = cls()
-        crawler.signals.connect(s.spider_opened, signal=signals.spider_opened)
-        return s
+            row=[
+            song["name"],
+            song["artists"][0]["name"],
+            song["album"]["release_date"],
+            song["uri"],
+            track_features[0]['danceability'],
+            track_features[0]['energy'],
+            track_features[0]['valence']             
+            ]
 
-    def process_spider_input(self, response, spider):
-        # Called for each response that goes through the spider
-        # middleware and into the spider.
+            # for this specific track id call that audio features thing and get those special features
 
-        # Should return None or raise an exception.
-        return None
+            df.loc[len(df)]=row
 
-    def process_spider_output(self, response, result, spider):
-        # Called with the results returned from the Spider, after
-        # it has processed the response.
+df.to_csv('songs.csv')
 
-        # Must return an iterable of Request, or item objects.
-        for i in result:
-            yield i
 
-    def process_spider_exception(self, response, exception, spider):
-        # Called when a spider or process_spider_input() method
-        # (from other spider middleware) raises an exception.
-
-        # Should return either None or an iterable of Request or item objects.
-        pass
-
-    def process_start_requests(self, start_requests, spider):
-        # Called with the start requests of the spider, and works
-        # similarly to the process_spider_output() method, except
-        # that it doesn’t have a response associated.
-
-        # Must return only requests (not items).
-        for r in start_requests:
-            yield r
-
-    def spider_opened(self, spider):
-        spider.logger.info("Spider opened: %s" % spider.name)
-
-
-class PlaylistGeneratorDownloaderMiddleware:
-    # Not all methods need to be defined. If a method is not defined,
-    # scrapy acts as if the downloader middleware does not modify the
-    # passed objects.
-
-    @classmethod
-    def from_crawler(cls, crawler):
-        # This method is used by Scrapy to create your spiders.
-        s = cls()
-        crawler.signals.connect(s.spider_opened, signal=signals.spider_opened)
-        return s
-
-    def process_request(self, request, spider):
-        # Called for each request that goes through the downloader
-        # middleware.
-
-        # Must either:
-        # - return None: continue processing this request
-        # - or return a Response object
-        # - or return a Request object
-        # - or raise IgnoreRequest: process_exception() methods of
-        #   installed downloader middleware will be called
-        return None
-
-    def process_response(self, request, response, spider):
-        # Called with the response returned from the downloader.
-
-        # Must either;
-        # - return a Response object
-        # - return a Request object
-        # - or raise IgnoreRequest
-        return response
-
-    def process_exception(self, request, exception, spider):
-        # Called when a download handler or a process_request()
-        # (from other downloader middleware) raises an exception.
-
-        # Must either:
-        # - return None: continue processing this exception
-        # - return a Response object: stops process_exception() chain
-        # - return a Request object: stops process_exception() chain
-        pass
-
-    def spider_opened(self, spider):
-        spider.logger.info("Spider opened: %s" % spider.name)
-
-
-
-# pipelines.py
-# Define your item pipelines here
-#
-# Don't forget to add your pipeline to the ITEM_PIPELINES setting
-# See: https://docs.scrapy.org/en/latest/topics/item-pipeline.html
-
-
-# useful for handling different item types with a single interface
-from itemadapter import ItemAdapter
-
-
-class PlaylistGeneratorPipeline:
-    def process_item(self, item, spider):
-        return item
-
-
-
-
-# settings.py
-# Scrapy settings for playlist_generator project
-#
-# For simplicity, this file contains only settings considered important or
-# commonly used. You can find more settings consulting the documentation:
-#
-#     https://docs.scrapy.org/en/latest/topics/settings.html
-#     https://docs.scrapy.org/en/latest/topics/downloader-middleware.html
-#     https://docs.scrapy.org/en/latest/topics/spider-middleware.html
-
-BOT_NAME = "playlist_generator"
-
-SPIDER_MODULES = ["playlist_generator.spiders"]
-NEWSPIDER_MODULE = "playlist_generator.spiders"
-
-
-# Crawl responsibly by identifying yourself (and your website) on the user-agent
-#USER_AGENT = "playlist_generator (+http://www.yourdomain.com)"
-
-# Obey robots.txt rules
-ROBOTSTXT_OBEY = True
-
-# Configure maximum concurrent requests performed by Scrapy (default: 16)
-#CONCURRENT_REQUESTS = 32
-
-# Configure a delay for requests for the same website (default: 0)
-# See https://docs.scrapy.org/en/latest/topics/settings.html#download-delay
-# See also autothrottle settings and docs
-#DOWNLOAD_DELAY = 3
-# The download delay setting will honor only one of:
-#CONCURRENT_REQUESTS_PER_DOMAIN = 16
-#CONCURRENT_REQUESTS_PER_IP = 16
-
-# Disable cookies (enabled by default)
-#COOKIES_ENABLED = False
-
-# Disable Telnet Console (enabled by default)
-#TELNETCONSOLE_ENABLED = False
-
-# Override the default request headers:
-#DEFAULT_REQUEST_HEADERS = {
-#    "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
-#    "Accept-Language": "en",
-#}
-
-# Enable or disable spider middlewares
-# See https://docs.scrapy.org/en/latest/topics/spider-middleware.html
-#SPIDER_MIDDLEWARES = {
-#    "playlist_generator.middlewares.PlaylistGeneratorSpiderMiddleware": 543,
-#}
-
-# Enable or disable downloader middlewares
-# See https://docs.scrapy.org/en/latest/topics/downloader-middleware.html
-#DOWNLOADER_MIDDLEWARES = {
-#    "playlist_generator.middlewares.PlaylistGeneratorDownloaderMiddleware": 543,
-#}
-
-# Enable or disable extensions
-# See https://docs.scrapy.org/en/latest/topics/extensions.html
-#EXTENSIONS = {
-#    "scrapy.extensions.telnet.TelnetConsole": None,
-#}
-
-# Configure item pipelines
-# See https://docs.scrapy.org/en/latest/topics/item-pipeline.html
-#ITEM_PIPELINES = {
-#    "playlist_generator.pipelines.PlaylistGeneratorPipeline": 300,
-#}
-
-# Enable and configure the AutoThrottle extension (disabled by default)
-# See https://docs.scrapy.org/en/latest/topics/autothrottle.html
-#AUTOTHROTTLE_ENABLED = True
-# The initial download delay
-#AUTOTHROTTLE_START_DELAY = 5
-# The maximum download delay to be set in case of high latencies
-#AUTOTHROTTLE_MAX_DELAY = 60
-# The average number of requests Scrapy should be sending in parallel to
-# each remote server
-#AUTOTHROTTLE_TARGET_CONCURRENCY = 1.0
-# Enable showing throttling stats for every response received:
-#AUTOTHROTTLE_DEBUG = False
-
-# Enable and configure HTTP caching (disabled by default)
-# See https://docs.scrapy.org/en/latest/topics/downloader-middleware.html#httpcache-middleware-settings
-#HTTPCACHE_ENABLED = True
-#HTTPCACHE_EXPIRATION_SECS = 0
-#HTTPCACHE_DIR = "httpcache"
-#HTTPCACHE_IGNORE_HTTP_CODES = []
-#HTTPCACHE_STORAGE = "scrapy.extensions.httpcache.FilesystemCacheStorage"
-
-# Set settings whose default value is deprecated to a future-proof value
-REQUEST_FINGERPRINTER_IMPLEMENTATION = "2.7"
-TWISTED_REACTOR = "twisted.internet.asyncioreactor.AsyncioSelectorReactor"
-FEED_EXPORT_ENCODING = "utf-8"
-
-
-
-
-
-# related_words_spider.py
-import scrapy
-from scrapy.linkextractors import LinkExtractor
-
-class wordsSpider(scrapy.Spider):
-    name = 'related_words_spider'
-    start_urls = ["https://relatedwords.io/"] 
-
-    def _init_(self, **kwargs):
-        super()._init_(**kwargs)
-  
-    def parse(self, response):
-        """
-        """
-        topic_url=response.url + "-".join((self.ui).lower().split())
-        yield scrapy.Request(topic_url,callback=self.parse_word_links)
-     
-    def parse_word_links(self, response):
-        """
-        get the links of first 10 keywords of user input's word
-        """
-        #gets links from page
-        related_words=response.css('span.term a::text')[0:10].getall()
-        link_list=["https://relatedwords.io/" + "-".join((word).split()) for word in related_words]
-        
-        # get the link for the first 10 related words 
-        for link in link_list:
-             yield scrapy.Request(url=link, callback = self.parse_related_words)
-    
-    def parse_related_words(self,response):
-        
-        words=response.css('span.term a::text')[0:10].getall()
-    
-        for word in words:
-            yield{
-                "topic": response.css('title::text').get().split(" Words")[0].lower(),
-                "related_word": word
-            }
+# Function 3: 
