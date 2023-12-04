@@ -8,8 +8,6 @@ app = Flask(__name__)
 def index():
     if request.method == 'POST':
         keyword = request.form['keyword'].lower()
-        cid = request.form['cid']
-        cs = request.form['cs']
         vibe = request.form['vibe']
         while (True):
             topic="-".join(keyword.split())
@@ -23,10 +21,6 @@ def index():
         <html>
             <body>
                 <form method="post">
-                    Enter Your Spotify Client ID: <input type="text" name="cid"/>
-                <br>
-                    Enter Your Spotify Client Secret: <input type="text" name="cs"/>
-                <br>
                     Enter a Topic: <input type="text" name="keyword"/>
                 <br>
                     Enter a Playlist Vibe: <input type="text" name="vibe"/>
