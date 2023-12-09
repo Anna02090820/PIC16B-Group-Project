@@ -29,7 +29,7 @@ def get_related_words(keyword,topic):
 
 def spotify_authentication():
     cid="45d772a85b0a4c2681a42696ad3b5ef3"
-    cs="9e9848f1081e459ebc686f6f62b5902d"
+    cs="9471f4a95ba34fb1a7c8414bc801542e"
     sp_oauth=SpotifyOAuth(client_id=cid,
                           client_secret=cs,
                           redirect_uri="http://localhost:2023/callback",
