@@ -8,8 +8,6 @@ import time
 from scrapy import cmdline
 import pandas as pd
 import spotipy.oauth2 as oauth2
-from spotipy.oauth2 import SpotifyOAuth
-from spotipy.oauth2 import SpotifyClientCredentials
 from playlist_generator.spiders.related_words_spider import wordsSpider
 from twisted.internet import reactor
 import scrapy
@@ -68,6 +66,8 @@ def get_playlist_songs(sp,related_words):
 
                 df.loc[len(df)]=row
     return df
+# def filter_df(df):
+#     return updated_df
 
 def generate_playlist(keyword,topic):
     related_words=get_related_words(keyword,topic)
@@ -76,8 +76,8 @@ def generate_playlist(keyword,topic):
     playlist=sp.user_playlist_create(user=sp.me()["id"],
                                      name=f"{keyword.title()} Playlist",
                                      public=False,
-                                     description=f"This is a {keyword.title()} Themed Playlist")
-    tracks=playlist_df["uri"].sample(20)
+                                     description=f"This is a {keyword.title()} Themed Playlist") # f" This playlist has a {} vibe"
+    tracks=playlist_df["uri"].sample(30)
     sp.user_playlist_add_tracks(sp.me()["id"], playlist["id"], tracks)
     
     return playlist["external_urls"]["spotify"]
