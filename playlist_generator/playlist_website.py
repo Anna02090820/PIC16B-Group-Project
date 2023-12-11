@@ -20,7 +20,9 @@ def index():
         <html>
             <style>
             body  {
-              background-image: url("https://playliststreams.com/wp-content/uploads/2020/04/abstract-spotify-desktop-wallpaper-62370-64314-hd-wallpapers.jpg");
+               background-image: linear-gradient(darkgreen, black);
+              background-attachment: fixed;
+              font-family: arial;
             }
             h2 {
               color: white;
