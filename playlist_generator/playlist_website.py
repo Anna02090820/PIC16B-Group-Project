@@ -20,9 +20,13 @@ def index():
         <html>
             <style>
             body  {
-               background-image: linear-gradient(darkgreen, black);
+              background-image: linear-gradient(darkgreen, black);
               background-attachment: fixed;
               font-family: arial;
+              display:flex; 
+              flex-direction:column; 
+              justify-content:center;
+              min-height:100vh;
             }
             h2 {
               color: white;
