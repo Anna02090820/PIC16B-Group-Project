@@ -74,9 +74,9 @@ def generate_playlist(keyword,topic,mood):
     sp=spotify_authentication()
     playlist_df=get_playlist_songs(sp,related_words)
     playlist=sp.user_playlist_create(user=sp.me()["id"],
-                                     name=f"{keyword.title()} Playlist",
+                                     name=f" {mood.title()} {keyword.title()} Playlist",
                                      public=False,
-                                     description=f"This is a {keyword.title()} Themed Playlist") # f" This playlist has a {} vibe"
+                                     description=f"This is a {mood.title()} {keyword.title()} Themed Playlist") 
     tracks=playlist_df["uri"].sample(30)
     sp.user_playlist_add_tracks(sp.me()["id"], playlist["id"], tracks)
     
