@@ -69,7 +69,7 @@ def get_playlist_songs(sp,related_words):
 # def filter_df(df):
 #     return updated_df
 
-def generate_playlist(keyword,topic):
+def generate_playlist(keyword,topic,mood):
     related_words=get_related_words(keyword,topic)
     sp=spotify_authentication()
     playlist_df=get_playlist_songs(sp,related_words)
