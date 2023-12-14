@@ -47,13 +47,13 @@ def index():
             <center>
             <h2>
             Enter a Topic and Mood to Generate a Spotify Playlist
-            🎵🕺
             </h2>
             </center>
             </div>
             
             <form action = ""method="post" style="text-align:center" novalidate>
             Topic: <input type="text" name="keyword">
+            <br>
             <br>
             Mood: <input type="text" name="mood">
             <br>
