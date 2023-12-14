@@ -13,7 +13,7 @@ def index():
             topic="-".join(keyword.split())
             r = requests.head(f"https://relatedwords.io/{topic}")
             
-            if (r.status_code == 200):
+            if (r.status_code == 200 and mood in ["hype","agitated","sorrowful","chill"] ):
                 break
         url=playlist.generate_playlist(keyword,topic,mood)
         return redirect(url) 
