@@ -46,7 +46,7 @@ def index():
             <div class="container"><br>
             <center>
             <h2>
-            Enter a Topic to Generate a Spotify Playlist
+            Enter a Topic and Mood to Generate a Spotify Playlist
             🎵🕺
             </h2>
             </center>
