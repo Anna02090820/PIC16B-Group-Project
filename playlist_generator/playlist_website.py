@@ -8,6 +8,7 @@ app = Flask(__name__)
 def index():
     if request.method == 'POST':
         keyword = request.form['keyword'].lower()
+        mood = request.form['mood'].lower() 
         while (True):
             topic="-".join(keyword.split())
             r = requests.head(f"https://relatedwords.io/{topic}")
@@ -21,14 +22,11 @@ def index():
             <style>
             body  {
               background-image: linear-gradient(darkgreen, black);
-              background-attachment: fixed;
               font-family: arial;
               display:flex; 
               flex-direction:column; 
               justify-content:center;
               min-height:100vh;
-            }
-            h2 {
               color: white;
               text-align: center;
             }
@@ -40,12 +38,17 @@ def index():
             <center>
             <h2>
             Enter a Topic to Generate a Spotify Playlist
-            🎵🕺</h2>
+            🎵🕺
+            </h2>
             </center>
             </div>
             
             <form action = ""method="post" style="text-align:center" novalidate>
-            <input type="text" name="keyword">
+            Topic: <input type="text" name="keyword">
+            <br>
+            Mood: <input type="text" name="mood">
+            <br>
+            <br>
             <input type="submit" value="Generate Playlist"/>
             </form>
             </html>
