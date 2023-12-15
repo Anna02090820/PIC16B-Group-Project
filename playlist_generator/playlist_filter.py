@@ -86,3 +86,26 @@ def query_find_chill(df, conn):
     # read sql command as pandas
     df = pd.read_sql_query(cmd, conn)
     return df
+
+def user_input(mood, df, conn):
+    '''
+    Take in user input and perform function based on input
+    Arguments:
+        mood: user input of mood
+        df: dataframe of all songs from related words
+        conn: SQL connection needed for command
+    Returns:
+        df: dataframe of "chill" song
+    '''
+    mood = lower(mood)
+    
+    if mood == "hype":
+        return query_find_hype(df, conn)
+    elif mood == "agitated":
+        return query_find_agitated(df, conn)
+    elif mood == "sorrowful":
+        return query_find_sorrowful(df, conn)
+    elif mood == "chill":
+        return query_find_chill(df, conn)
+    else:
+        return "Mood not applicable. Please try again."
