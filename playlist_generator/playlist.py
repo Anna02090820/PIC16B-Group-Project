@@ -63,23 +63,33 @@ def get_playlist_songs(sp,related_words):
             mod_title=" "+re.sub(r'[^\w\s]', '', song["name"].lower())+" " 
 
             if f" {word} " in mod_title: #checks if word is in title not within another word
-
                 track_features = sp.audio_features(song["id"]) #gets audio features of a song
-
                 try:
-                    track_features[0]['acousticness'] # check if audio features exist
-                except:
-                    continue
+                    try:
+                        track_features[0]['acousticness'] # check if audio features exist
+                    except:
+                        continue
 
-                #creates row with song features
-                row=[song["name"],
-                        song["artists"][0]["name"],
-                        song["album"]["release_date"],
-                        song["uri"],
-                        track_features[0]['energy'],
-                        track_features[0]['valence']]
+                    row=[song["name"],
+                         song["artists"][0]["name"],
+                            song["album"]["release_date"],
+                            song["uri"],
+                            track_features[0]['energy'],
+                            track_features[0]['valence']]
 
-                df.loc[len(df)]=row #appends row to song dataframe
+                    # for this specific track id call that audio features thing and get those special features
+                    df.loc[len(df)]=row
+                    
+                except spotipy.exceptions.SpotifyException as e: # handle spotify api errors
+                    if (e.http_status == 429):  # Too many requests
+                        print("An error occurred:", e)
+                        print("Playlist cannot load at this moment. Please try again later.")
+                        break
+                    else:
+                        print("An error occurred:", e)
+                except Exception as e: # handle general errors
+                    print("An error occurred:", e)
+                    break
     return df
 
 def generate_playlist(keyword,topic,mood):
@@ -94,12 +104,23 @@ def generate_playlist(keyword,topic,mood):
     related_words=get_related_words(keyword,topic) #gets words related to user input
     sp=spotify_authentication()                     #user authentication
     playlist_df=get_playlist_songs(sp,related_words) #initial list of spotify songs
+
+    # create SQL database and connection
+    conn = sqlite3.connect("related_songs.db")
+    playlist_df.to_sql("songs", conn, if_exists="replace")
+
+    # create playlist of mood based on user input
+    mood_df = playlist_filter.user_input(mood, playlist_df, conn)
+    
     playlist=sp.user_playlist_create(user=sp.me()["id"],
                                      name=f" {mood.title()} {keyword.title()} Playlist",
                                      public=False,
                                      description=f"This is a {mood.title()} {keyword.title()} Themed Playlist") 
                                     #creates user playlist
-    tracks=playlist_df["uri"].sample(30)
+    tracks=mood_df["uri"]
     sp.user_playlist_add_tracks(sp.me()["id"], playlist["id"], tracks) #adds tracks to playlist
+
+    # close SQL connection
+    conn.close()
     
     return playlist["external_urls"]["spotify"] #returns url to playlist
