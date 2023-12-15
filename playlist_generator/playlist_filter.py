@@ -3,6 +3,7 @@ Various functions to filter through the created related words dataframe by 4 moo
 '''
 
 import pandas as pd
+import string
 
 def query_find_hype(df, conn):
     '''
@@ -15,7 +16,7 @@ def query_find_hype(df, conn):
     '''
     cmd = \
     """
-    SELECT S.title, S.artist, S.release_date, S.uri, S.danceability, S.energy, S.valence
+    SELECT S.title, S.artist, S.release_date, S.uri, S.energy, S.valence
     FROM songs S
     WHERE energy >= 0.5
     AND valence >= 0.5
@@ -36,7 +37,7 @@ def query_find_agitated(df, conn):
     '''
     cmd = \
     """
-    SELECT S.title, S.artist, S.release_date, S.uri, S.danceability, S.energy, S.valence
+    SELECT S.title, S.artist, S.release_date, S.uri, S.energy, S.valence
     FROM songs S
     WHERE energy >= 0.5 
     AND valence <= 0.5
@@ -57,7 +58,7 @@ def query_find_sorrowful(df, conn):
     '''
     cmd = \
     """
-    SELECT S.title, S.artist, S.release_date, S.uri, S.danceability, S.energy, S.valence
+    SELECT S.title, S.artist, S.release_date, S.uri, S.energy, S.valence
     FROM songs S
     WHERE energy <= 0.5
     AND valence <= 0.5
@@ -78,7 +79,7 @@ def query_find_chill(df, conn):
     '''
     cmd = \
     """
-    SELECT S.title, S.artist, S.release_date, S.uri, S.danceability, S.energy, S.valence
+    SELECT S.title, S.artist, S.release_date, S.uri, S.energy, S.valence
     FROM songs S
     WHERE energy <= 0.5
     AND valence > 0.5
@@ -97,7 +98,7 @@ def user_input(mood, df, conn):
     Returns:
         df: dataframe of "chill" song
     '''
-    mood = lower(mood)
+    mood = mood.lower()
     
     if mood == "hype":
         return query_find_hype(df, conn)
