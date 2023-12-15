@@ -59,7 +59,7 @@ def index():
             Mood: <input type="text" name="mood" placeholder="Select a Mood from Below">
             <br>
             <br>
-            <img src="https://i.postimg.cc/j5vcp2fc/mood.png" style="width:250px">
+            <img src="https://i.postimg.cc/gJ664RrZ/desmos-graph-6.png" style="width:250px">
             <br>
             <br>
             <input type="submit" value="Generate Playlist"/>
