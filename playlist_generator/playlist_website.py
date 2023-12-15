@@ -28,6 +28,7 @@ def index():
         return redirect(url) #redirects the user to the generated playlist on Spotify
     return render_template_string('''
         <html>
+            <html>
             <style>
             body  {
               background-image: linear-gradient(darkgreen, black);
@@ -55,7 +56,10 @@ def index():
             Topic: <input type="text" name="keyword">
             <br>
             <br>
-            Mood: <input type="text" name="mood">
+            Mood: <input type="text" name="mood" placeholder="Select a Mood from Below">
+            <br>
+            <br>
+            <img src="https://i.postimg.cc/gJ664RrZ/desmos-graph-6.png" style="width:250px">
             <br>
             <br>
             <input type="submit" value="Generate Playlist"/>
