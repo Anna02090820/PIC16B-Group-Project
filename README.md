@@ -77,8 +77,7 @@ There are no direct ethical ramifications for our product since we are not using
 5. View Your Playlist:
    The redirected Spotify page will display your newly created playlist.
 
-
-
+Thank you!
 
 
 
