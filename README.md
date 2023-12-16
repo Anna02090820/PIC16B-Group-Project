@@ -26,15 +26,6 @@ In the Spotify Playlist Generator project, Scrapy, a fast high-level web crawlin
 
 The logic behind this scraping process is straightforward yet effective. When a user inputs a keyword, such as a mood, genre, or artist, the Scrapy spider, named `wordsSpider` in the project, is triggered. This spider navigates to the "relatedwords.io" website, constructs a URL based on the user-provided keyword, and begins the scraping process. It fetches the first set of words closely related to the keyword, which are often direct synonyms or closely associated terms. Subsequently, the spider digs deeper, following links on the page to gather a broader range of related words and phrases. This comprehensive list of words becomes the foundation for searching and assembling songs in the Spotify playlist.
 
-![related_words_webpage](playlist_generator/Screen Shot 2023-12-15 at 19.52.33 PM.png)
-
-*This is the main website we used to get the most related words according to the input keywords. We will scrape through this website.
-
-### Code Snippet
-Here's a snippet from the `related_words_spider.py` file, demonstrating the basic structure of the `wordsSpider` class:
-
-This code shows the key methods in the spider: `parse`, `parse_word_links`, and `parse_related_words`. These methods are responsible for constructing the URL based on the user's keyword, extracting related words from the web pages, and following links to gather more words, respectively.
-
 ## Technical component 2: spotify API
 After using Scrapy to find words related to the user topic, we began to work with the Spotify API. To use this resource, our group first created a Spotify developer account and created a Spotify app that provided us with a unique client ID and client secret. To facilitate working with the API we used the Python library, Spotipy. This library includes many easy-to-use functions that are helpful when sifting through and extracting Spotify data. In particular, we used the authentication function, search, audio features, create playlist, and add tracks to playlist functions. 
 
@@ -46,15 +37,11 @@ To execute song filtering by mood, we opted to use an SQL database and create da
 
 Once we have a filtered set of songs, we are ready to create our Spotify playlist. We first used the create playlist function to create a playlist that has the user topic as its title and contains a brief description describing the mood of the songs in the playlist. Lastly, we used the add songs to playlist filter to add the filtered songs to our playlist.
 Code snippet: example of 1 filtering function
-Figure: Thayer’s model 
 
 ## Technical component 3: flask
 After coding all the components for creating a Spotify playlist, we decided to make a Flask app to allow users to easily run our code. The Flask app that we created has two text boxes, one for entering a topic and the other for entering a playlist mood. If a user inputs an invalid topic or mood, the Flask app will not deploy the code that generates the playlist. Instead, it will wait until the user changes their input to something valid. Once the form receives valid inputs and the user clicks the generate playlist button, the Flask app will run the code to create the playlist from start to finish. 
 
 The Flask app generates the playlist in the background using a couple of helper functions. Upon providing valid inputs and clicking the generate playlist button, the Flask app calls the generate_playlist function with the topic and mood as parameters. Within this function, many other functions are called. The first function call is get_related_words which runs the Scrapy spider to find at most 100 words related to the user’s topic. Next, it calls the spotify_authentication function to allow access to the Spotify API and calls get_playlist_songs to find songs that have words related to the user topic in their title. The next function called excludes any songs that have a different mood than the user-specified one. The next few function calls create the user playlist with a relevant name and description and add songs to the playlist. Lastly, the generate function will return the URL of this playlist and our flask app redirects the user to this site.
-
-
-Concluding remarks, including a discussion of ethical ramifications of your project.
 
 This project was a fun way to apply the concepts we have learned in class to create an interesting product. It was especially rewarding to be able to experience our finished product by being able to listen to the playlists created. One of our main difficulties with this project was that in working with the Spotify API, there was a rate limit in which we can call on the API, and if we call on it often, we get a 429 error. The only remedy we were able to find was to wait about an hour or so after every call, and even longer if there are calls happening during the wait time.
 
