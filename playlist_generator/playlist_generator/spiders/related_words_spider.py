@@ -28,7 +28,7 @@ class wordsSpider(scrapy.Spider):
         yield scrapy.Request(topic_url,callback=self.parse_word_links)
      
     def parse_word_links(self, response):
-         """
+        """
         Parse the response to extract the first 10 related words and generate requests
         to fetch more related words for each.
 
