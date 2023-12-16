@@ -12,6 +12,8 @@ from playlist_generator.spiders.related_words_spider import wordsSpider
 from twisted.internet import reactor
 import scrapy
 from scrapy.crawler import CrawlerRunner
+import sqlite3
+import playlist_filter # custom module
 
 def get_related_words(keyword,topic):
     """
