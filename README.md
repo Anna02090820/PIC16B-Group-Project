@@ -26,6 +26,8 @@ In the Spotify Playlist Generator project, Scrapy, a fast high-level web crawlin
 
 The logic behind this scraping process is straightforward yet effective. When a user inputs a keyword, such as a mood, genre, or artist, the Scrapy spider, named `wordsSpider` in the project, is triggered. This spider navigates to the "relatedwords.io" website, constructs a URL based on the user-provided keyword, and begins the scraping process. It fetches the first set of words closely related to the keyword, which are often direct synonyms or closely associated terms. Subsequently, the spider digs deeper, following links on the page to gather a broader range of related words and phrases. This comprehensive list of words becomes the foundation for searching and assembling songs in the Spotify playlist.
 
+![related_words_webpage](playlist_generator/Screen Shot 2023-12-15 at 19.52.33 PM.png)
+
 *This is the main website we used to get the most related words according to the input keywords. We will scrape through this website.
 
 ### Code Snippet
