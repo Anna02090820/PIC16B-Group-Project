@@ -34,7 +34,7 @@ def get_related_words(keyword,topic):
     return related_words
 
 def spotify_authentication():
-     """
+    """
     This function conducts Spotify authentication. By using our Spotify 
     App's client secret and ID, our code is granted access to working with the
     Spotify API. This function then returns the authenticated Spotipy object.
@@ -49,7 +49,7 @@ def spotify_authentication():
     return sp
 
 def get_playlist_songs(sp,related_words):
-     """
+    """
     This function gets an initial set of songs from the Spotify API. For each word in related_words,
     the function extracts various songs in the Spotify dataset that contain that word in their title.
     The function then extracts features of the songs. The songs and features are then appended to a dataframe 
